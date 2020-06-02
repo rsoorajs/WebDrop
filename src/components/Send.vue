@@ -13,57 +13,64 @@
       </template>
     </b-navbar>
     <div class="container">
-      <div class="actions">
-        <FileUpload
-          class="button is-success"
-          post-action="#"
-          extensions="*"
-          accept="*"
-          :multiple="true"
-          :size="1024 * 1024 * 10"
-          v-model="files"
-          ref="upload">
-          Select files
-        </FileUpload>
-        <span>
-          <b-button class="is-text">
-            {{ selectedUsers.length }} users
-          </b-button>
-        </span>
+      <div>
+        <b-button class="is-text">
+          {{ selectedUsers.length }} users
+        </b-button>
+        <b-button v-for="(userID, index) in selectedUsers" v-bind:key='index'>{{ $store.state.users[userID].name }}</b-button>
       </div>
-      <table class="table is-fullwidth">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Speed</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(file, index) in files" :key="file.id">
-            <td>{{index + 1}}</td>
-            <td>
-              <div class="filename">
-                {{file.name}}
-              </div>
-              <div class="progress" v-if="file.active || file.progress !== '0.00'">
-                <div :class="{'progress-bar': true, 'progress-bar-striped': true, 'bg-danger': file.error, 'progress-bar-animated': file.active}" role="progressbar" :style="{width: file.progress + '%'}">{{file.progress}}%</div>
-              </div>
-            </td>
-            <td>{{file.size | formatSize}}</td>
-            <td>{{file.speed | formatSize}}</td>
+      <b-tabs>
+        <b-tab-item label="Files">
+          <div class="actions">
+            <FileUpload
+              class="button is-success"
+              post-action="#"
+              extensions="*"
+              accept="*"
+              :multiple="true"
+              :size="1024 * 1024 * 10"
+              v-model="files"
+              ref="upload">
+              Select files
+            </FileUpload>
+          </div>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Speed</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(file, index) in files" :key="file.id">
+                <td>{{index + 1}}</td>
+                <td>
+                  <div class="filename">
+                    {{file.name}}
+                  </div>
+                  <div class="progress" v-if="file.active || file.progress !== '0.00'">
+                    <div :class="{'progress-bar': true, 'progress-bar-striped': true, 'bg-danger': file.error, 'progress-bar-animated': file.active}" role="progressbar" :style="{width: file.progress + '%'}">{{file.progress}}%</div>
+                  </div>
+                </td>
+                <td>{{file.size | formatSize}}</td>
+                <td>{{file.speed | formatSize}}</td>
 
-            <td v-if="file.error">{{file.error}}</td>
-            <td v-else-if="file.success">success</td>
-            <td v-else-if="file.active">active</td>
-            <td v-else>
-              <b-button @click.prevent="$refs.upload.remove(file)">Remove</b-button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <td v-if="file.error">{{file.error}}</td>
+                <td v-else-if="file.success">success</td>
+                <td v-else-if="file.active">active</td>
+                <td v-else>
+                  <b-button @click.prevent="$refs.upload.remove(file)">Remove</b-button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </b-tab-item>
+        <b-tab-item label="Messages">
+        </b-tab-item>
+      </b-tabs>
     </div>
   </div>
 </template>
